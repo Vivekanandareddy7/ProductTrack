@@ -1,0 +1,156 @@
+/* Tracker only. Shared primitives and the landing page do not use these hooks. */
+.tracker-surface,
+.tracker-dialog,
+.tracker-popup {
+  --tracker-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --icon-swap-dur: 200ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+}
+/* transitions-dev/09-icon-swap.md: preserved verbatim. */
+.t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+.t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--icon-swap-dur) var(--icon-swap-ease),
+    filter var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+  will-change: opacity, filter, transform;
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon {
+    transition: none !important;
+  }
+}
+.tracker-surface .tracker-press,
+.tracker-dialog .tracker-press {
+  transition:
+    transform 160ms var(--tracker-ease-out),
+    background-color 160ms ease,
+    color 160ms ease;
+}
+.tracker-surface .tracker-press:active,
+.tracker-dialog .tracker-press:active {
+  transform: scale(0.97);
+}
+.tracker-product {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tracker-product:hover {
+    border-color: #c7c7c7;
+    box-shadow: 0 4px 16px -12px rgb(0 0 0 / 0.2);
+  }
+}
+.tracker-dialog[data-state="open"] {
+  animation: tracker-modal-in 250ms var(--tracker-ease-out);
+}
+.tracker-dialog[data-state="closed"] {
+  animation: tracker-modal-out 150ms var(--tracker-ease-out);
+}
+@keyframes tracker-modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes tracker-modal-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.tracker-popup {
+  transform-origin: var(--transform-origin);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tracker-surface .tracker-press:active,
+  .tracker-dialog .tracker-press:active {
+    transform: none;
+  }
+  .tracker-dialog[data-state="open"] {
+    animation: tracker-fade-in 150ms ease-out;
+  }
+  .tracker-dialog[data-state="closed"] {
+    animation: tracker-fade-out 100ms ease-out;
+  }
+  .tracker-surface [data-slot="button"] {
+    transition-property: color, background-color, opacity;
+  }
+}
+@keyframes tracker-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tracker-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* The existing chart's labels stay subordinate to the product price. */
+.tracker-chart .text-chart-label {
+  color: #a3a3a3;
+  font-size: 10px;
+}
+.tracker-chart .text-chart-tooltip-foreground {
+  color: #262626;
+}
+.tracker-chart .text-chart-tooltip-muted {
+  color: #737373;
+}
+.tracker-select {
+  transform-origin: var(--radix-select-content-transform-origin);
+}
+.tracker-select[data-state="open"],
+.tracker-sheet[data-state="open"] {
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.tracker-select[data-state="closed"],
+.tracker-sheet[data-state="closed"] {
+  animation-duration: 150ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tracker-select[data-state="open"],
+  .tracker-sheet[data-state="open"] {
+    animation: tracker-fade-in 150ms ease-out;
+  }
+  .tracker-select[data-state="closed"],
+  .tracker-sheet[data-state="closed"] {
+    animation: tracker-fade-out 100ms ease-out;
+  }
+}
